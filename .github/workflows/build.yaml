@@ -11,8 +11,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4.2.0
+      with:
+        dotnet-version: '9.0.x'
+
     - name: Install MAUI Workloads
-      run: dotnet workload restore
+      run: dotnet workload install maui
 
     - name: Restore dependencies
       run: dotnet restore
@@ -22,6 +27,7 @@ jobs:
 
     - name: Publish
       run: dotnet publish --configuration Release --no-build --output ./output
+
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
