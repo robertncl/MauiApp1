@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  build:
+  build-android:
     runs-on: macos-latest
 
     steps:
@@ -22,15 +22,74 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+    - name: Build Android
+      run: dotnet build --configuration Release --no-restore -f net9.0-android
 
-    - name: Publish
-      run: dotnet publish --configuration Release --no-build --output ./output
+    - name: Publish Android
+      run: dotnet publish --configuration Release --no-build --output ./output-android -f net9.0-android
 
-
-    - name: Upload artifact
+    - name: Upload Android artifact
       uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
-        path: ./output
+        name: android-artifact
+        path: ./output-android
+
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4.2.0
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Install MAUI Workloads
+      run: dotnet workload install maui
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build iOS
+      run: dotnet build --configuration Release --no-restore -f net9.0-ios
+
+    - name: Publish iOS
+      run: dotnet publish --configuration Release --no-build --output ./output-ios -f net9.0-ios
+
+    - name: Upload iOS artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ios-artifact
+        path: ./output-ios
+
+  build-maccatalyst:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4.2.0
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Install MAUI Workloads
+      run: dotnet workload install maui
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build MacCatalyst
+      run: dotnet build --configuration Release --no-restore -f net9.0-maccatalyst
+
+    - name: Publish MacCatalyst
+      run: dotnet publish --configuration Release --no-build --output ./output-maccatalyst -f net9.0-maccatalyst
+
+    - name: Upload MacCatalyst artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: maccatalyst-artifact
+        path: ./output-maccatalyst
