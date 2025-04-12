@@ -1,6 +1,9 @@
 name: Build and Upload Artifact
 
 on:
+    dotnet new xunit -n MauiApp1.Tests
+    cd MauiApp1.Tests
+    dotnet add reference ../MauiApp1/MauiApp1.csproj
   push:
 
 jobs:
